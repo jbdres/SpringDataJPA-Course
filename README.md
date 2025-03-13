@@ -1,0 +1,4 @@
+# Spring Boot & Spring Data JPA - Complete Course
+Follow the complete Spring Boot & Spring Data JPA course taught by [@BoualiAli](https://www.youtube.com/@BoualiAli) and published on the [FreeCodeCamp](https://www.youtube.com/@freecodecamp) YouTube channel.
+
+**Course description**: Learn how to use Spring Boot and Spring Data JPA in this full course for beginners. These are two pivotal technologies in modern Java development. Spring Boot simplifies the process of building stand-alone, production-grade Spring-based applications with minimal effort, while Spring Data JPA is a powerful tool for simplifying data access operations in Java applications, seamlessly integrating with databases.
