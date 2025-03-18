@@ -45,10 +45,10 @@ ListPagingAndSortingRepository            ListCrudRepository
     private Integer id;
     private String firstName;
     private String lastName;
-    @Column(unique = true, nullable = false)
+    @Column(unique = true)
     private String email;
     private int age;
-    @Column(updatable = false, nullable = false)
+    @Column(updatable = false)
     private LocalDateTime createdAt;
     @Column(insertable = false)
     private LocalDateTime lastModified;
