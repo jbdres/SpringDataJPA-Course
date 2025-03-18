@@ -7,6 +7,8 @@ import jakarta.persistence.Id;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Data
 @NoArgsConstructor
 @Entity
@@ -28,11 +30,15 @@ public class Author {
     @Id
     @GeneratedValue // strategy = GenerationType.AUTO
     private Integer id;
-    @Column(name = "column_firstName", length = 30)
+    @Column(name = "column_first_name")
     private String firstName;
     private String lastName;
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String email;
     private int age;
+    @Column(updatable = false, nullable = false)
+    private LocalDateTime createdAt;
+    @Column(insertable = false)
+    private LocalDateTime lastModified;
 
 }
