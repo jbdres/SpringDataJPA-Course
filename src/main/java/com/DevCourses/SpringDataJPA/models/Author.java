@@ -4,14 +4,6 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/*
- * JPA Entity representing an Author within the system.
- * Employs Lombok to automate the generation of boilerplate code (getters, setters, equals, hashCode, toString, constructors).
- * @Data generates getters, setters, equals, hashCode, toString, and constructors for all fields.
- * @NoArgsConstructor generates a no-argument constructor.
- * @Entity marks the class as a JPA entity, mapping it to a database table.
- */
-
 @Data
 @NoArgsConstructor
 @Entity
@@ -23,28 +15,32 @@ public class Author {
      * @Id designates this field as the entity's primary key.
      * @GeneratedValue specifies the primary key generation strategy.
      * - strategy = GenerationType.AUTO: Delegates strategy selection to the persistence provider (Hibernate in this case).
-     * Hibernate, upon detecting PostgreSQL, defaults to a sequence strategy (SEQUENCE).
-     * - generator = "custom_sequence": Associates this generation with the sequence generator defined by @SequenceGenerator.
-     * @SequenceGenerator defines a custom sequence generator.
-     * - name = "custom_sequence": Name of the sequence generator, referenced by @GeneratedValue.
-     * - sequenceName = "author_sequence": Name of the sequence in the PostgreSQL database.
+     * Hibernate, upon detecting MySQL, defaults to a table strategy (TABLE).
+     * - generator = "author_id_gen": Associates this generation with the table generator defined by @TableGenerator.
+     * @TableGenerator defines a primary key generator based on a database table.
+     * - name = "author_id_gen": Name of the table generator, referenced by @GeneratedValue.
+     * - table = "id_generator": Name of the table that stores the sequence values.
+     * - pkColumnName = "id_name": Name of the column that stores the sequence names.
+     * - valueColumnName = "id_value": Name of the column that stores the current sequence values.
      * - allocationSize = 1: Defines the increment for the sequence per allocation. A value of 1 ensures unique, sequential IDs without gaps.
      * This is crucial for preventing "gaps" in the ID sequence.
      *
      * Technical considerations:
-     * - GenerationType.AUTO allows portability across databases but may result in a less optimal strategy if not explicitly defined.
-     * - Specifying allocationSize = 1 minimizes the risk of "gaps" in the ID sequence but can increase database load for high-throughput applications.
-     * - Using sequenceName provides explicit control over the database sequence, aiding in administration and debugging.
+     * - TableGenerator is useful for databases that do not support native sequences.
+     * - Specifying allocationSize = 1 minimizes the risk of "gaps" in the ID sequence but can increase database load due to frequent table updates.
+     * - The "id_generator" table must exist in the database with the specified columns before the application can generate IDs.
      */
 
     @Id
     @GeneratedValue(
             strategy = GenerationType.AUTO,
-            generator = "custom_sequence"
+            generator = "author_id_gen"
     )
-    @SequenceGenerator(
-            name = "custom_sequence",
-            sequenceName = "author_sequence",
+    @TableGenerator(
+            name = "author_id_gen",
+            table = "id_generator",
+            pkColumnName = "id_name",
+            valueColumnName = "id_value",
             allocationSize = 1
     )
     private Integer id;
