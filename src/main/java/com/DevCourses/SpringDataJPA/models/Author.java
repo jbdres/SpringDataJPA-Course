@@ -4,6 +4,8 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,26 +13,36 @@ import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Entity
 public class Author {
 
-    /* Note:
-    * - With the @Column annotation we can set the next properties of a field:
-    *   name, unique, nullable, insertable, updatable, columnDefinition,
-    *   table, length, precision and scale.
-    *   ------------------------------
-    *   e.g., @Column(
-                insertable = false,
-                updatable = true
-        )
-        private String anyColumn
-    *   ------------------------------
-    * */
+    /* Notes:
+     * Repositories:
+     * - In Spring Data JPA a repository is a Java interface
+     *   that is used to abstract the data access layer from
+     *   the business logic.
+     * - Repositories are typically defined as interfaces that
+     *   extends one of the Spring Data JPA repository interfaces,
+     *   such as: JPA repository, extends from three other different
+     *   repositories. We can extend it to have our own repository.
+     *
+              ------------- Repository -------------
+              |                                    |
+  PagingAndSortingRepository                CrudRepository
+              |                                    |
+ListPagingAndSortingRepository            ListCrudRepository
+              |                                    |
+              ------------ JpaRepository -----------
+                                 |
+                          AuthorRepository
+     *
+     * */
 
     @Id
-    @GeneratedValue // strategy = GenerationType.AUTO
+    @GeneratedValue
     private Integer id;
-    @Column(name = "column_first_name")
     private String firstName;
     private String lastName;
     @Column(unique = true, nullable = false)
