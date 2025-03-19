@@ -19,6 +19,6 @@ public class Section {
     @GeneratedValue
     private Integer id;
     private String name;
-    private Integer order;
+    private int sectionOrder;
 
 }
