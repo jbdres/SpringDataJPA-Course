@@ -2,16 +2,18 @@ package com.DevCourses.SpringDataJPA.models;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@EqualsAndHashCode(callSuper = true)
+@SuperBuilder
 @Entity
-public class Lecture {
+public class Lecture extends BaseEntity {
 
     @Id
     @GeneratedValue
