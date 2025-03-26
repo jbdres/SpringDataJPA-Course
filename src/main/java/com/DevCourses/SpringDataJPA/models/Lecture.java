@@ -22,7 +22,6 @@ public class Lecture {
     @JoinColumn(name = "section_id")
     private Section section;
 
-    @OneToOne()
-    @JoinColumn(name = "resource_id")
+    @OneToOne(mappedBy = "lecture")
     private Resource resource;
 }
