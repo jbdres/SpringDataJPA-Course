@@ -24,4 +24,18 @@ public class Resource {
     @JoinColumn(name = "lecture_id")
     private Lecture lecture;
 
+    /* Pros y cons about inheritance in Spring Data JPA
+     * With inheritance you can create queries that span multiples entities
+     *   without have separated queries for each query.
+     *
+     * ways of strategies in inheritance?
+     *   - Join table per class (the base class?)
+     *   - Joint table per concrete class
+     *
+     * Tips: (Find out the difference between Composition and inheritance)
+     * Composition over inheritance -> It's recommended
+     *   Composition is more flexible and easier to change
+     *
+     * But for this project, inheritance will be used.
+     * */
 }
