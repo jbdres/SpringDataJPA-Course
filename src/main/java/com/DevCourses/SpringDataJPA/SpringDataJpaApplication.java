@@ -1,7 +1,7 @@
 package com.DevCourses.SpringDataJPA;
 
-import com.DevCourses.SpringDataJPA.models.Author;
-import com.DevCourses.SpringDataJPA.repositories.AuthorRepository;
+import com.DevCourses.SpringDataJPA.models.Video;
+import com.DevCourses.SpringDataJPA.repositories.VideoRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -16,17 +16,15 @@ public class SpringDataJpaApplication {
 
     // Execute code at application startup
     @Bean
-    public CommandLineRunner commandLineRunner(AuthorRepository authorRepository) {
+    public CommandLineRunner commandLineRunner(VideoRepository videoRepository) {
         return args -> {
             // Use the @Builder annotation from lombok to create an author
-            Author author = Author.builder()
-                    .firstName("Julian")
-                    .lastName("Tovar")
-                    .email("julian@mail.com")
-                    .age(20)
+            Video video = Video.builder()
+                    .name("The first video")
+                    .length(5)
                     .build();
             // Insert the object in the database
-            authorRepository.save(author);
+            videoRepository.save(video);
         };
     }
 
