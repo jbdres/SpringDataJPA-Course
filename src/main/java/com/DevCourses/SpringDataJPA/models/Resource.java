@@ -11,7 +11,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @SuperBuilder
 @Entity
-@Inheritance(strategy = InheritanceType.JOINED)
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class Resource {
 
     @Id
@@ -26,45 +26,45 @@ public class Resource {
     private Lecture lecture;
 
     /* Notes: Inheritance strategy used in Spring Data JPA
-     * Joined Strategy
+     * Table Per Class Strategy
      * ---------------------
      * Pros
-     * - Normalized Structure:
-     *  - Each entity in the hierarchy has its own table, reducing
-     *    redundancy and ensuring data integrity.
-     *  - No null values, as fields are stored only where they are
-     *    relevant.
-     * - Scalability:
-     *  - Ideal for handling complex inheritance hierarchy with large
-     *    numbers of entities and fields.
-     *  - Easier to add new subclasses without disrupting the schema.
-     * - Data Integrity:
-     *  - Relational design helps avoid inconsistencies, making it
-     *    suitable for applications with strict requirements for
-     *    structure data.
-     * - Flexible Queries:
-     *  - You can query specific subclasses or the parent entity without
-     *    unnecessary data clutter.
+     * - No Null Values:
+     *  - Each subclass has its own table, ensuring that only relevant
+     *    columns are included. This eliminates the problem of sparse
+     *    tables with null values.
+     * - Subclass-specific Efficiency:
+     *  - Queries for a specific subclass are faster because they only
+     *    interact with one table, avoiding irrelevant data from other
+     *    subclasses.
+     * - Simplified Schema For Subclasses
+     *  - Each subclass table contains only fields specific to that
+     *    subclass, making the schema cleaner and easier to manage for
+     *    subclass-specific operations.
+     * - Write Operations:
+     *  - Adding or updating subclass entities doesn't require touching
+     *    unrelated tables, which can improve write efficiency.
      * ---------------------
      * Cons:
-     * - Performance Overhead:
-     *  - Queries for parent entities require JOIN operations across
-     *    multiple tables, which can slow down retrieval in large datasets.
-     * - Complexity:
-     *  - More tables mean more effort in managing relationships and
-     *    schema migrations.
-     * - Configuration:
-     *  - Slightly mor challenging to configure compared to SINGLE_TABLE.
-     * - Disk Space:
-     *  - While normalized, storing relationships between tables can lead
-     *    to increased disk usage.
+     * - Parent Class Queries:
+     *  - Retrieving all entities of the parent class requires UNION
+     *    operations across all subclass table, which can hurt performance.
+     * - Complex Queries:
+     *  - Queries spanning across multiple subclasses can become cumbersome
+     *    and less efficient.
+     * - Increased Table Count:
+     *  - Having one table for each subclass increases the number of tables
+     *    in the database, which can make the schema harder to manage in
+     *    large applications.
+     * - Disk Space Usage:
+     *  - Separated tables might lead to higher disk usage compared to
+     *    strategies like SINGLE_TABLE.
      * ---------------------
      * General Tip:
-     * - The Joined Strategy shines when you need a well-structured and
-     *   scalable solution for applications with complex inheritance
-     *   hierarchies. It's perfect for scenarios where avoiding null and
-     *   maintaining data integrity are critical, even at the cost of
-     *   slightly slower query performance.
+     * - The TABLE_PER_CLASS strategy is best when each subclass has unique
+     *   fields and the queries are often specific to individual subclasses.
+     *   It's not ideal when you frequently need to query the parent class
+     *   or work with large hierarchies.
      * */
 
 }
