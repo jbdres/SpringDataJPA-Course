@@ -3,17 +3,17 @@ package com.DevCourses.SpringDataJPA.models;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = true)
 @SuperBuilder
 @Entity
-public class Resource extends BaseEntity {
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE) // Other strategies: TABLE_PER_CLASS and JOINED
+@DiscriminatorColumn(name = "resource_type") // Default: name = "DTYPE"
+public class Resource {
 
     @Id
     @GeneratedValue
