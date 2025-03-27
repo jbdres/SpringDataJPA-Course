@@ -1,6 +1,5 @@
 package com.DevCourses.SpringDataJPA.models;
 
-import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,7 +13,6 @@ import lombok.experimental.SuperBuilder;
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder
 @Entity
-@DiscriminatorValue("T")
 public class Text extends Resource {
 
     private String content;
