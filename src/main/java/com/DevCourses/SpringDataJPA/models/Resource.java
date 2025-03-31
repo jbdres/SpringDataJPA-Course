@@ -25,46 +25,83 @@ public class Resource {
     @JoinColumn(name = "lecture_id")
     private Lecture lecture;
 
-    /* Notes: Inheritance strategy used in Spring Data JPA
-     * Table Per Class Strategy
-     * ---------------------
-     * Pros
-     * - No Null Values:
-     *  - Each subclass has its own table, ensuring that only relevant
-     *    columns are included. This eliminates the problem of sparse
-     *    tables with null values.
-     * - Subclass-specific Efficiency:
-     *  - Queries for a specific subclass are faster because they only
-     *    interact with one table, avoiding irrelevant data from other
-     *    subclasses.
-     * - Simplified Schema For Subclasses
-     *  - Each subclass table contains only fields specific to that
-     *    subclass, making the schema cleaner and easier to manage for
-     *    subclass-specific operations.
-     * - Write Operations:
-     *  - Adding or updating subclass entities doesn't require touching
-     *    unrelated tables, which can improve write efficiency.
-     * ---------------------
-     * Cons:
-     * - Parent Class Queries:
-     *  - Retrieving all entities of the parent class requires UNION
-     *    operations across all subclass table, which can hurt performance.
-     * - Complex Queries:
-     *  - Queries spanning across multiple subclasses can become cumbersome
-     *    and less efficient.
-     * - Increased Table Count:
-     *  - Having one table for each subclass increases the number of tables
-     *    in the database, which can make the schema harder to manage in
-     *    large applications.
-     * - Disk Space Usage:
-     *  - Separated tables might lead to higher disk usage compared to
-     *    strategies like SINGLE_TABLE.
-     * ---------------------
-     * General Tip:
-     * - The TABLE_PER_CLASS strategy is best when each subclass has unique
-     *   fields and the queries are often specific to individual subclasses.
-     *   It's not ideal when you frequently need to query the parent class
-     *   or work with large hierarchies.
+    /* ------------------------------------------------------------------
+     * Notes: @Polymorphism annotation in Hibernate
+     * This annotation was used to control how JPQL queries behaved when
+     *   using inheritance with @Inheritance(strategy = InheritanceType.
+     *   TABLE_PER_CLASS).
+     *
+     * What @Polymorphism did:
+     * - Allowed defining whether queries on the base entity should include
+     *   or exclude subclasses.
+     * - @Polymorphism(type = Polymorphism.EXPLICIT): Ensured that queries
+     *   only retrieved records from the base entity, excluding subclasses.
+     * - @Polymorphism(type = Polymorphism.IMPLICIT): Included all subclasses
+     *   in the query (default behavior).
+     *
+     * Why is @Polymorphism deprecated?
+     * As of Hibernate 6, @Polymorphism has been removed because its behavior
+     *   can now be controlled using JPQL(TYPE()) or alternative annotations.
+     *   Hibernate recommends more flexible strategies for filtering query
+     *   results.
+     *
+     * Alternatives to @Polymorphism
+     * If you need the same control over base entity queries without
+     *  including subclasses, you can use:
+     * - @where (to manually filter base entities in queries)
+     * - TYPE() in JPQL (to ensure only base entities are queried)
      * */
+
+    /* ------------------------------------------------------------------
+    * Example without @Polymorphism (Default behavior)
+    * If you DO NOT use @Polymorphism, Hibernate will automatically retrieve
+    *   all subclass data.
+    *
+    * List<Resource> results = entityManager.createQuery(
+            "SELECT b FROM Resource b", Resource.class
+      ).getResultList();
+    *
+    * Problem: This will execute a UNION ALL, including Video, File and
+    *   Text data, even if you only wanted Resource.
+    * */
+
+    /* ------------------------------------------------------------------
+    * Example using @where (Alternative to @Polymorphism)
+    * Entity:
+    * @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+    * @Where(clause = "dtype = 'Resource'")
+    * public class Resource { ... }
+    *
+    * how does this work?
+    * - The dtype column exist in the database.
+    * - Only records where dtype = 'Resource' will be retrieved.
+    * - Subclasses must have a different dtype value.
+    *
+    * Query:
+    * List<Resource> results = entityManager.createQuery(
+            "SELECT b FROM Resource b", Resource.class
+      ).getResultList();
+    *
+    * Now it retrieves only Resource records, excluding subclasses.
+    * */
+
+    /* ------------------------------------------------------------------
+    * Example using TYPE() in JPQL (Another alternative to @Polymorphism)
+    * If you don't want to modify with @where, you can modify the query
+    *   using TYPE().
+    *
+    * List<Resource> results = entityManager.createQuery(
+            "SELECT b FROM Resource b WHERE TYPE(b) = Resource",
+            Resource.class
+      ).getResultList();
+    *
+    * The filters only Records instances, excluding Video, File and Text.
+    * */
+
+    /* ------------------------------------------------------------------
+    * - Best alternative: @where, because it automatically filters result
+    *       without modifying queries.
+    * - Avoid @Polymorphism, as Hibernate 6 has removed support for it.
+    * */
 
 }
